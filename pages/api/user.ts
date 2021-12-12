@@ -2,10 +2,6 @@ import { getSession } from "@auth0/nextjs-auth0";
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDb from "../../utils/mongodb";
 
-type Data = {
-  user: any;
-};
-
 export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -14,7 +10,7 @@ export default async function userHandler(
     const { db } = await connectDb();
     const user: any = await getSession(req, res)!.user;
 
-    const { name, location, bio, avalibility } = req.body;
+    const { name, location, bio, avalibility, picture } = req.body;
 
     const isExisted = await db
       .collection("users")
@@ -35,6 +31,7 @@ export default async function userHandler(
           location,
           bio,
           avalibility,
+          picture,
           setup: true,
         },
       }

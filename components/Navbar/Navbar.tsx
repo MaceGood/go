@@ -12,19 +12,21 @@ const Navbar: NextComponentType = () => {
     <div className="flex w-full py-4 px-6 justify-between items-center z-50 bg-white">
       <h1
         onClick={() => router.push("/")}
-        className="text-5xl cursor-pointer text-gray-900"
+        className="text-5xl cursor-pointer text-gray-900 font-semibold"
       >
         GO
       </h1>
 
-      <div className="md:flex hidden items-center px-3 py-2 rounded-xl bg-gray-100 border border-gray-400 max-w-md w-1/2">
-        <SearchIcon className="h-7 w-7 text-gray-900" />
-        <input
-          placeholder="Search"
-          type="text"
-          className="border-0 outline-none ml-2 text-gray-900 text-lg bg-transparent w-full"
-        />
-      </div>
+      {router.pathname === "/" && (
+        <div className="md:flex hidden items-center px-3 py-2 rounded-xl bg-gray-100 border border-gray-400 max-w-md w-1/2">
+          <SearchIcon className="h-7 w-7 text-gray-900" />
+          <input
+            placeholder="Search"
+            type="text"
+            className="border-0 outline-none ml-2 text-gray-900 text-lg bg-transparent w-full"
+          />
+        </div>
+      )}
 
       <div className="flex items-center">
         <MenuNavbar />

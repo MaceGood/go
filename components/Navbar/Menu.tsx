@@ -6,7 +6,7 @@ import { LogoutIcon } from "@heroicons/react/outline";
 import { useUser } from "@auth0/nextjs-auth0";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
-import * as types from "../types";
+import * as types from "../../types";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");

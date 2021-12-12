@@ -1,12 +1,17 @@
-import { combineReducers } from "redux";
 import * as types from "../types";
 
-export const user = (state = null, action: { type: any }) => {
+export const userInfo = (
+  state = { user: null, usersAccepting: null },
+  action: { type: any; payload: any }
+) => {
   switch (action.type) {
     case types.SET_USER:
-      return action;
+      return { ...state, user: action.payload };
+    case types.USERS_ACCEPTING:
+      return { ...state, usersAccepting: action.payload };
     case types.LOGOUT:
-      return (state = null);
+      return { ...state, user: null };
+
     default:
       return state;
   }

@@ -2,22 +2,27 @@ import { useUser } from "@auth0/nextjs-auth0";
 import { LocationMarkerIcon } from "@heroicons/react/solid";
 import { UserCircleIcon } from "@heroicons/react/outline";
 import Head from "next/head";
-import { useState } from "react";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-interface Props {}
-
-const Setup = ({}: Props) => {
+const Setup = () => {
   const { user, error, isLoading } = useUser();
   const router = useRouter();
   const userDb = useSelector((user: any) => user);
-  const [userInfo, setUserInfo] = useState<any>({
-    name: user?.name || "",
+  const [userInfo, setUserInfo] = useState<{
+    name: string;
+    location: string;
+    bio: string;
+    avalibility: string;
+    picture: string | null | undefined;
+  }>({
+    name: userDb?.userInfo?.user[0]?.name || user?.name || "",
     location: "",
     bio: "",
     avalibility: "",
+    picture: user?.picture,
   });
 
   useEffect(() => {
@@ -33,16 +38,11 @@ const Setup = ({}: Props) => {
   const userInfoCheck =
     userInfo.name && userInfo.location && userInfo.bio && userInfo.avalibility;
 
-  const finish = async () => {
+  const finish = async (): Promise<void> => {
     if (userInfoCheck === "") return;
 
-    await fetch("http://localhost:3000/api/user", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userInfo),
-    }).then(() => router.push("/"));
+    await axios.put("http://localhost:3000/api/user", userInfo);
+    router.push("/");
   };
 
   return (
@@ -98,7 +98,7 @@ const Setup = ({}: Props) => {
           <textarea
             placeholder="Bio"
             maxLength={300}
-            value={userInfo.Bio}
+            value={userInfo.bio}
             onChange={(e) => setUserInfo({ ...userInfo, bio: e.target.value })}
             className="bg-gray-100 py-2 px-4 rounded-lg border border-gray-400 w-full outline-none font-medium text-lg placeholder-gray-400 h-48 resize-none hover:opacity-80"
           />
@@ -109,7 +109,7 @@ const Setup = ({}: Props) => {
 
         <fieldset className="md:mt-0 mt-5">
           <div>
-            <legend className="text-xl">Avalibility</legend>
+            <legend className="text-xl">Availability</legend>
           </div>
           <div className="mt-4 space-y-3">
             <div className="flex items-center">

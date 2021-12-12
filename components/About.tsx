@@ -7,13 +7,11 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
-interface Props {}
-
-const About = ({}: Props) => {
+const About: React.FC = () => {
   const router = useRouter();
   let { user, error, isLoading } = useUser();
   const userDb = useSelector((user: any) => user);
-  const userShort = userDb?.user?.user[0];
+  const userShort = userDb?.userInfo?.user[0];
   const [userInfo, setUserInfo] = useState({
     name: "",
     location: "",
