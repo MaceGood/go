@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../actions/user";
 import connectionInfo from "../utils/connectionInfo";
 import { setConnections } from "../actions/connections/connections";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   connections: any;
@@ -20,13 +20,14 @@ const Connections = ({ connections, userDb }: Props) => {
   // const connectionsFromHome = useSelector((connections: any) => connections);
   // const connectionsFromHomeShort =
   //   connectionsFromHome?.connections?.connections;
-
-  const connectionsResults = connectionInfo(connections, userDb[0]);
+  const [connectionsResults, setConnectionsResults] = useState<any>([]);
 
   useEffect(() => {
     // if (connectionsFromHomeShort?.length > 0) return;
+    setConnectionsResults(connectionInfo(connections, userDb[0]));
+
     dispatch(setConnections(connectionsResults));
-  }, [dispatch, connectionsResults]);
+  }, [dispatch, connectionsResults, connections, userDb]);
 
   // if (user?.userInfo?.user === null) {
   //   dispatch(setUser(userDb));

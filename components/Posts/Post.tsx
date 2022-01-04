@@ -10,6 +10,7 @@ interface Props {
   avalibility: string;
   picture: string;
   email: string;
+  connected: any;
 }
 
 function classNames(...classes: any[]) {
@@ -23,6 +24,7 @@ export const Post: React.FC<Props> = ({
   avalibility,
   picture,
   email,
+  connected,
 }) => {
   const { user, error, isLoading } = useUser();
 
@@ -35,9 +37,6 @@ export const Post: React.FC<Props> = ({
   const handleConnect = async (): Promise<void> => {
     await axios.post("http://localhost:3000/api/connections/connect", options);
   };
-
-  // mozebi da napravam --> ako ne se konktirani konektiraj inaku unkonektiraj
-  let connected;
 
   return (
     <div className="flex border max-w-md bg-gray-100 mt-2 mb-4 border-gray-400 rounded-lg pb-3">

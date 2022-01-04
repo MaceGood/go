@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { setUser, setUsersAccepting } from "../actions/user";
 import { Posts } from "../components/Posts/Posts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Connections from "../components/Connections/Connections";
 import Loading from "../components/Loading";
 import connectionInfo from "../utils/connectionInfo";
@@ -26,21 +26,24 @@ interface Props {
   - ako e public koga ke stisne connect nema da prave request za connectot da se prifane
   - ako e private koga ke se stisne connect se prave request i ako e accept togas se prifaka inaku se brise requestot
   - podobar ui/ux
+  - CMS
+  - setup da se srede avalibility
 */
 
 const Home = ({ userDb, usersAccepting, connections }: Props) => {
   const { user, error, isLoading } = useUser();
   const router = useRouter();
   const dispatch = useDispatch();
-  const connectionsResults = connectionInfo(connections, userDb[0]);
 
   useEffect(() => {
     dispatch(setUsersAccepting(usersAccepting));
   }, [dispatch, usersAccepting]);
 
   useEffect(() => {
-    dispatch(setConnections(connectionsResults));
-  }, [dispatch, connectionsResults]);
+    const connectionsInfo = connectionInfo(connections, userDb[0]);
+
+    dispatch(setConnections(connectionsInfo));
+  }, [dispatch, connections, userDb]);
 
   if (isLoading) return <Loading />;
 

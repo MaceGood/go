@@ -1,9 +1,6 @@
 import { ChatAlt2Icon } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setConnections } from "../../actions/connections/connections";
-import connectionInfo from "../../utils/connectionInfo";
 import Person from "./Person";
 
 const Connections: React.FC = () => {

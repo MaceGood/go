@@ -20,7 +20,6 @@ export default async function connectHandler(
 
     const { name, email, picture } = req.body;
 
-    // ako emajl e user.email i ako probam togas ke dade greska a ako emajlot e isto so post.email
     const isExisted: any = await db
       .collection("connections")
       .find({

@@ -6,9 +6,18 @@ import Post from "./Post";
 export const Posts: React.FC = () => {
   const { user, error, isLoading } = useUser();
   const userDb = useSelector((user: any) => user);
+  const connections = useSelector((connections: any) => connections);
   const userShort = userDb?.userInfo?.user[0];
   const usersAccepting = useSelector((usersAccepting: any) => usersAccepting);
   const usersAcceptingShort = usersAccepting?.userInfo?.usersAccepting;
+
+  const connectionsInfo: any = (userAccepting: any) => {
+    for (let connection of connections?.connections?.connections) {
+      if (userAccepting?.email === connection?.email) {
+        return true;
+      }
+    }
+  };
 
   return (
     <div className="overflow-y-scroll no-scrollbar max-h-screen">
@@ -22,6 +31,7 @@ export const Posts: React.FC = () => {
           avalibility: string;
           picture: string;
           email: string;
+          connected: any;
         }) => (
           <Post
             key={userAccepting?._id}
@@ -31,6 +41,7 @@ export const Posts: React.FC = () => {
             avalibility={userAccepting?.avalibility}
             picture={userAccepting?.picture}
             email={userAccepting?.email}
+            connected={connectionsInfo(userAccepting)}
           />
         )
       )}

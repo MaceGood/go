@@ -19,9 +19,9 @@ const Setup = () => {
     picture: string | null | undefined;
   }>({
     name: userDb?.userInfo?.user[0]?.name || user?.name || "",
-    location: "",
-    bio: "",
-    avalibility: "",
+    location: userDb?.userInfo?.user[0]?.location || "",
+    bio: userDb?.userInfo?.user[0]?.bio || "",
+    avalibility: userDb?.userInfo?.user[0]?.avalibility || "",
     picture: user?.picture,
   });
 
@@ -118,7 +118,10 @@ const Setup = () => {
                 name="push-avalibility"
                 value="Accepting guests"
                 onChange={(e) =>
-                  setUserInfo({ ...userInfo, avalibility: e.target.value })
+                  setUserInfo({
+                    ...userInfo,
+                    avalibility: e.target.value,
+                  })
                 }
                 type="radio"
                 className="h-5 w-5 border-gray-400 cursor-pointer"
@@ -134,7 +137,10 @@ const Setup = () => {
               <input
                 value="Maybe Accepting guests"
                 onChange={(e) =>
-                  setUserInfo({ ...userInfo, avalibility: e.target.value })
+                  setUserInfo({
+                    ...userInfo,
+                    avalibility: e.target.value,
+                  })
                 }
                 id="push-maybe-accepting"
                 name="push-avalibility"
@@ -152,7 +158,10 @@ const Setup = () => {
               <input
                 value="Not Accepting guests"
                 onChange={(e) =>
-                  setUserInfo({ ...userInfo, avalibility: e.target.value })
+                  setUserInfo({
+                    ...userInfo,
+                    avalibility: e.target.value,
+                  })
                 }
                 id="push-not-accepting"
                 name="push-avalibility"
