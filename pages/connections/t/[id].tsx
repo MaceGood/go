@@ -1,59 +1,62 @@
 import { GetServerSideProps, NextPage } from "next";
-import Navbar from "../components/Navbar/Navbar";
+import Navbar from "../../../components/Navbar/Navbar";
 import Head from "next/head";
-import connectDb from "../utils/mongodb";
-import { getSession } from "@auth0/nextjs-auth0";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../actions/user";
-import connectionInfo from "../utils/connectionInfo";
-import { setConnections } from "../actions/connections/connections";
+import connectDb from "../../../utils/mongodb";
+import { getSession, useUser } from "@auth0/nextjs-auth0";
+import { useDispatch } from "react-redux";
+import connectionInfo from "../../../utils/connectionInfo";
+import { setConnections } from "../../../actions/connections/connections";
 import { useEffect, useState } from "react";
+import Loading from "../../../components/Loading";
+import { Login } from "./../../login";
+import { useRouter } from "next/router";
+import Chat from "../../../components/Connections/Chat/Chat";
+import Bar from "../../../components/Connections/Bar";
 
 interface Props {
   connections: any;
   userDb: any;
 }
 
-const Connections = ({ connections, userDb }: Props) => {
+const ConnectionsId = ({ connections, userDb }: Props) => {
+  const { user, error, isLoading } = useUser();
   const dispatch = useDispatch();
-  const user = useSelector((user: any) => user);
-  // const connectionsFromHome = useSelector((connections: any) => connections);
-  // const connectionsFromHomeShort =
-  //   connectionsFromHome?.connections?.connections;
+
   const [connectionsResults, setConnectionsResults] = useState<any>([]);
 
   useEffect(() => {
-    // if (connectionsFromHomeShort?.length > 0) return;
     setConnectionsResults(connectionInfo(connections, userDb[0]));
 
     dispatch(setConnections(connectionsResults));
   }, [dispatch, connectionsResults, connections, userDb]);
 
-  // if (user?.userInfo?.user === null) {
-  //   dispatch(setUser(userDb));
-  // }
+  if (isLoading) return <Loading />;
+  if (!user) return <Login />;
 
   return (
     <div className="max-w-screen-2xl w-full min-h-screen mx-auto font-semibold">
       <Head>
-        <title>GO</title>
+        <title>Connections - GO</title>
       </Head>
 
       <Navbar />
 
-      {/* {(connectionsFromHomeShort || connectionsResults).map( */}
-      {connectionsResults?.map((connection: any) => (
-        <div className="border" key={connection?._id}>
-          <p>{connection?.name}</p>
-          <p>{connection?.email}</p>
-          <img src={connection?.picture} alt="" />
+      <div className="flex flex-col px-6">
+        <h1 className="text-2xl font-semibold mb-3 cursor-default">
+          Connections
+        </h1>
+
+        <div className="flex">
+          <Bar connectionsResults={connectionsResults} />
+
+          <Chat />
         </div>
-      ))}
+      </div>
     </div>
   );
 };
 
-export default Connections;
+export default ConnectionsId;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { db } = await connectDb();

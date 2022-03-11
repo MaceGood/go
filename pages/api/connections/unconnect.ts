@@ -17,7 +17,6 @@ export default async function connectHandler(
     const userDb = JSON.parse(JSON.stringify(data));
     const userShort = userDb[0];
 
-    const { name, picture } = req.body;
     const { q }: any = req.query;
 
     const isExisted: any = await db
@@ -34,17 +33,14 @@ export default async function connectHandler(
       })
       .toArray();
 
-    if (isExisted.length > 0 || isExisted2.length > 0)
-      return res.status(400).json({ message: "already connected" });
+    if (isExisted.length < 0 || isExisted2.length < 0)
+      return res.status(400).json({ message: "not connected with that user" });
 
-    const connectionInfo = await db.collection("connections").insertOne({
-      email: userShort?.email,
-      name: userShort?.name,
-      picture: userShort?.picture,
-      post_email: q,
-      post_name: name,
-      post_picture: picture,
-      date: new Date().toString(),
+    const connectionInfo = await db.collection("connections").deleteOne({
+      $or: [
+        { email: userShort?.email, post_email: q },
+        { email: q, post_email: userShort?.email },
+      ],
     });
 
     res.status(200).json({ connectionInfo });

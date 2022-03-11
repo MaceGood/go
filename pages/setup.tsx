@@ -1,4 +1,4 @@
-import { useUser } from "@auth0/nextjs-auth0";
+import { getSession, useUser } from "@auth0/nextjs-auth0";
 import { LocationMarkerIcon } from "@heroicons/react/solid";
 import { UserCircleIcon } from "@heroicons/react/outline";
 import Head from "next/head";
@@ -6,11 +6,16 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import connectDb from "../utils/mongodb";
+import { GetServerSideProps } from "next";
 
-const Setup = () => {
+interface Props {
+  userDb: any;
+}
+
+const Setup = ({ userDb }: Props) => {
   const { user, error, isLoading } = useUser();
   const router = useRouter();
-  const userDb = useSelector((user: any) => user);
   const [userInfo, setUserInfo] = useState<{
     name: string;
     location: string;
@@ -41,6 +46,8 @@ const Setup = () => {
   const finish = async (): Promise<void> => {
     if (userInfoCheck === "") return;
 
+    if (userInfo.bio.length < 50) return;
+
     await axios.put("http://localhost:3000/api/user", userInfo);
     router.push("/");
   };
@@ -64,6 +71,12 @@ const Setup = () => {
       {userInfoCheck === "" && (
         <div className="flex items-center py-2 px-4 mt-5 mr-5 bg-red-100 rounded-lg border border-red-400 border-l-8 h-14 max-w-md hover:opacity-80">
           <p>Please fill in all fields below</p>
+        </div>
+      )}
+
+      {userInfo.bio.length < 50 && (
+        <div className="flex items-center py-2 px-4 mt-5 mr-5 bg-red-100 rounded-lg border border-red-400 border-l-8 h-14 max-w-md hover:opacity-80">
+          <p>Bio needs to be at least 50 characters long</p>
         </div>
       )}
 
@@ -97,13 +110,14 @@ const Setup = () => {
         <div className="max-w-md mr-5">
           <textarea
             placeholder="Bio"
+            minLength={50}
             maxLength={300}
             value={userInfo.bio}
             onChange={(e) => setUserInfo({ ...userInfo, bio: e.target.value })}
             className="bg-gray-100 py-2 px-4 rounded-lg border border-gray-400 w-full outline-none font-medium text-lg placeholder-gray-400 h-48 resize-none hover:opacity-80"
           />
           <p className="text-sm">
-            Tell us about yourself (up to 300 characters)
+            Tell us about yourself (from 50 to 300 characters)
           </p>
         </div>
 
@@ -178,9 +192,10 @@ const Setup = () => {
           </div>
         </fieldset>
       </div>
+
       <div
         onClick={finish}
-        className="flex items-center justify-center h-12 w-28 mt-4 rounded-lg bg-gray-100 border border-gray-400 cursor-pointer hover:opacity-80"
+        className="flex items-center justify-center h-12 w-28 mt-4 rounded-lg bg-gray-100 border border-gray-400 cursor-pointer hover:opacity-80 font-semibold"
       >
         <p>Finish</p>
       </div>
@@ -189,3 +204,20 @@ const Setup = () => {
 };
 
 export default Setup;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { db } = await connectDb();
+  const user: any = await getSession(context.req, context.res)!?.user;
+
+  const data = await db
+    .collection("users")
+    .find({ email: user?.email })
+    .toArray();
+  const userDb = JSON.parse(JSON.stringify(data));
+
+  return {
+    props: {
+      userDb: userDb,
+    },
+  };
+};

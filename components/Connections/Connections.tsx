@@ -13,7 +13,7 @@ const Connections: React.FC = () => {
     <div className="flex flex-col border py-4 px-4 my-2 mx-6 max-w-xs bg-gray-100  border-gray-400 text-gray-800 rounded-lg">
       <div
         className="flex items-center justify-between cursor-pointer"
-        onClick={() => router.push("/connections")}
+        onClick={() => router.push("/connections/inbox")}
       >
         <h1 className="text-2xl font-semibold">Connections</h1>
         <ChatAlt2Icon className="h-8 w-8" />
@@ -22,6 +22,7 @@ const Connections: React.FC = () => {
       {connections?.connections?.connections?.map((connection: any) => (
         <Person
           key={connection._id}
+          id={connection._id}
           picture={connection.picture}
           name={connection.name}
         />

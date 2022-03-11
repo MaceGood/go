@@ -20,6 +20,7 @@ export default async function userHandler(
     if (isExisted.length <= 0) {
       await db.collection("users").insertOne({
         email: user.email,
+        date: new Date().toString(),
       });
     }
 
@@ -33,6 +34,7 @@ export default async function userHandler(
           avalibility,
           picture,
           setup: true,
+          last_updated: new Date().toString(),
         },
       }
     );

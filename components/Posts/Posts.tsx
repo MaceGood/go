@@ -7,7 +7,6 @@ export const Posts: React.FC = () => {
   const { user, error, isLoading } = useUser();
   const userDb = useSelector((user: any) => user);
   const connections = useSelector((connections: any) => connections);
-  const userShort = userDb?.userInfo?.user[0];
   const usersAccepting = useSelector((usersAccepting: any) => usersAccepting);
   const usersAcceptingShort = usersAccepting?.userInfo?.usersAccepting;
 

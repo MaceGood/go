@@ -21,15 +21,6 @@ interface Props {
   connections: any;
 }
 
-/* planovi za app
-  - profile private i publuc
-  - ako e public koga ke stisne connect nema da prave request za connectot da se prifane
-  - ako e private koga ke se stisne connect se prave request i ako e accept togas se prifaka inaku se brise requestot
-  - podobar ui/ux
-  - CMS
-  - setup da se srede avalibility
-*/
-
 const Home = ({ userDb, usersAccepting, connections }: Props) => {
   const { user, error, isLoading } = useUser();
   const router = useRouter();

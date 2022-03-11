@@ -3,6 +3,7 @@ export default function connectionInfo(
   userDb: { name: string; email: string; picture: string }
 ) {
   for (let i = 0; i < connections.length; i++) {
+    // da se rese problem so imeto
     if (connections[i].name === userDb.name) {
       connections[i].name = connections[i].post_name;
     }
